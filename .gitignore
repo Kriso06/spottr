@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Environment secrets
+.env
+
+# Test and tool output
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
