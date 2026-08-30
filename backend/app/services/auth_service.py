@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.core.security import hash_password
+from app.core.security import hash_password, verify_password
 from app.models.user import User
 from app.schemas.auth import RegisterRequest
 
@@ -46,5 +46,27 @@ def register_user(db: Session, register_data: RegisterRequest) -> User:
         raise UserAlreadyExistsError(
             "A user with this email or username already exists."
         ) from error
+
+    return user
+
+def authenticate_user(
+    db: Session,
+    email: str,
+    password: str,
+) -> User | None:
+    normalized_email = email.strip().lower()
+
+    user = db.scalar(
+        select(User).where(User.email == normalized_email)
+    )
+
+    if user is None:
+        return None
+
+    if not user.is_active:
+        return None
+
+    if not verify_password(password, user.password_hash):
+        return None
 
     return user
