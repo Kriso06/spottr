@@ -14,6 +14,8 @@ from app.services.auth_service import (
     authenticate_user,
     register_user,
 )
+from app.core.dependencies import get_current_user
+from app.models.user import User
 
 router = APIRouter(
     prefix="/auth",
@@ -62,3 +64,12 @@ def login(
     access_token = create_access_token(subject=str(user.id))
 
     return TokenResponse(access_token=access_token)
+
+@router.get(
+    "/me",
+    response_model=UserResponse,
+)
+def get_me(
+    current_user: User = Depends(get_current_user),
+) -> UserResponse:
+    return current_user
