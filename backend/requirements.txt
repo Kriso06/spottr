@@ -1,2 +1,7 @@
 fastapi
 uvicorn[standard]
+sqlalchemy
+alembic
+psycopg[binary]
+geoalchemy2
+pydantic-settings
