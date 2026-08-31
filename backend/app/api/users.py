@@ -17,6 +17,12 @@ from app.services.user_service import (
     update_user_interests,
 )
 
+from app.schemas.location import (
+    LocationResponse,
+    LocationUpdateRequest,
+)
+from app.services.location_service import update_user_location
+
 router = APIRouter(
     prefix="/users",
     tags=["Users"],
@@ -48,6 +54,20 @@ def update_my_profile(
         profile_data=profile_data,
     )
 
+@router.put(
+    "/me/location",
+    response_model=LocationResponse,
+)
+def update_my_location(
+    location_data: LocationUpdateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> LocationResponse:
+    return update_user_location(
+        db=db,
+        user=current_user,
+        location_data=location_data,
+    )
 
 @router.get(
     "/me/interests",
